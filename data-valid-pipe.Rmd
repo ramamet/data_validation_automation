@@ -1,16 +1,26 @@
+---
+title: "Data Validation Report"
+output: 
+  html_document:
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, error = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r pkg-load}
 library(pointblank)
 library(projmgr)
 library(dplyr)
 library(purrr)
 library(glue)
 library(knitr)
+```
 
-# usethis::edit_r_environ()
+## Validation Results
 
-repo <- create_repo_ref("ramamet", "data_validation_automation", identifier = "GITHUB_PAT")
-#issues <- get_issues(repo, state = 'all') %>% parse_issues()
-
-#? pointblank
+```{r data-validation}
 tbl <- data.frame(x = c(1, 2, 3, 3), y = c(1, 1, 2, 2))
 act <- action_levels(warn_at = 0.01, notify_at = 0.01, stop_at = NULL)
 table_name <- "my_table"
@@ -23,12 +33,17 @@ agent <-
 
 res <- interrogate(agent)
 res
+```
 
-#?
+## Links to Open Issues
+
+```{r post-to-github}
+repo <- create_repo_ref("ramamet", "data_validation_automation", identifier = "GITHUB_PAT")
 desc_components <- c(
   "Variables: {glue_collapse(column)}",
   "Date: {Sys.Date()}",
   "Frequency: {n_failed}/{n} ({f_failed})",
+  "See full report at https://ramamet.github.io/data_validation_automation/"
 )
 desc_template <- paste(desc_components, collapse = "\n")
 
@@ -55,10 +70,10 @@ issues_df <-
 
 issue_numbers <- pmap(issues_df, 
                       possibly(~post_issue(ref = repo, ...), otherwise = "")
-)
+                      )
+```
 
-
-#?
+```{r link-to-github, results = "asis"}
 issues_open <- 
   get_issues(repo, state = "open") %>%
   parse_issues() %>%
@@ -66,11 +81,14 @@ issues_open <-
   mutate(link = glue("[{number}. {title}]({url})"))
 
 issues_open %>%
-  rowwise() %>%
-  select(
-    `Open Since` = created_at,
-    `Issue` = link,
-    `Assigned` = assignees_login,
-    `Activity` = n_comments
-  ) %>%
+    rowwise() %>%
+    select(
+        `Open Since` = created_at,
+        `Issue` = link,
+        `Assigned` = assignees_login,
+        `Activity` = n_comments
+    ) %>%
   kable()
+```
+
+
