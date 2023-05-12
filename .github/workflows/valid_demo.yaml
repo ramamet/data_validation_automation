@@ -4,7 +4,7 @@ on: push
 jobs:
   render:
     name: Render my document
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Create and populate .Renviron file
         run: |
