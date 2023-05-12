@@ -1,9 +1,5 @@
-on:
-  schedule:
-    - cron: "30 4 * * 3"
-  push:
-    branches:
-      - master
+name: valid-demo
+on: push
 
 jobs:
   render:
