@@ -19,5 +19,8 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v2
       - name: Install rmarkdown
         run: Rscript -e 'install.packages(c("pointblank", "projmgr", "dplyr", "purrr", "glue", "rmarkdown", "knitr"))'
+        run: Rscript -e 'install.packages(c("remotes", "rmdcheck", "covr"), repos="http://cran.us.r-project.org")' 
+        run: Rscript -e 'remotes::install_deps(dependencies = TRUE)'
+        run: Rscript -e 'remotes::install_github("repo/package")'
       - name: Render my document to all types
         run: Rscript -e 'rmarkdown::render("data-valid-pipe.Rmd", output_file = "index.html", output_dir = "docs")'
