@@ -16,8 +16,6 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v2
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
-      - name: Render my document to all types
-        run: Rscript -e 'rmarkdown::render("demo.Rmd")'
       - name: run-script
         run: Rscript -e 'rmarkdown::render("demo.Rmd", output_file = "index.html")'   
         
