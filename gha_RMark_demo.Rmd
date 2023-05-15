@@ -1,0 +1,28 @@
+---
+title: "GHA RMarkdown Demo"
+author: Ramanathan Perumal
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %X')`"
+output: html_document
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r, warning = FALSE}
+library(dplyr)
+```
+```{r}
+dim(starwars)
+starwars
+```
+
+```{r, eval = TRUE}
+starwars %>%
+  group_by(species, sex) %>%
+  select(height, mass) %>%
+  summarise(
+    height = mean(height, na.rm = TRUE),
+    mass = mean(mass, na.rm = TRUE)
+  )
+```
