@@ -18,8 +18,13 @@ jobs:
         run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
       - name: Render my document to all types
         run: Rscript -e 'rmarkdown::render("demo.Rmd")'
-      - name: Commit results
+      - name: run-script
+        run: Rscript -e 'rmarkdown::render("demo.Rmd", output_file = "index.html")'   
+        
+      - name: commit files
         run: |
-          git add .
-          git commit -m 'Re-build my-document' || echo "No changes to commit"
-          git push origin || echo "No changes to commit"
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add -A
+          git commit -m "Saving the results" || echo "no changes to commit"
+          git push origin || echo "no changes to commit"
