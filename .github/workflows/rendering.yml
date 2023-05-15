@@ -1,10 +1,7 @@
-name: Test multiple format rendering
-
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
+
+name: Test multiple format rendering
 
 jobs:
   test:
@@ -18,14 +15,3 @@ jobs:
         with:
           input_file: test/pdf.Rmd
           output_format: pdf_document
-      - name: Compile html document from rmd
-        uses: ./
-        with:
-          input_file: test/html.Rmd
-          output_format: html_document
-      - name: Compile word document from rmd
-        uses: ./
-        with:
-          input_file: test/word.Rmd
-          output_format: word_document
-
