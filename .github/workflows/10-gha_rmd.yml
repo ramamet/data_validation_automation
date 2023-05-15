@@ -1,39 +1,25 @@
 on:
   workflow_dispatch:
     
-name: renv setup
-  
+name: 10-gha_Rmarkdown
+
 jobs:
-  render-rmarkdown:
+  render:
+    name: Render my document
     runs-on: ubuntu-latest
-    # optionally use a convenient Ubuntu LTS + DVC + CML image
-    #container: docker://dvcorg/cml:latest
+    env: 
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}  
     steps:
-      - uses: actions/checkout@v3
-            
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        
-      - name: Setup Pandoc
-        uses: r-lib/actions/setup-pandoc@v2
-        
-      - name: Setup dependencies
+      - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-tinytex@v2
+      - name: Install rmarkdown
+        run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
+      - name: Render my document to all types
+        run: Rscript -e 'rmarkdown::render("demo.Rmd")'
+      - name: Commit results
         run: |
-          R -e 'install.packages("renv")' 
-          R -e 'renv::init()'
-          R -e 'install.packages("dplyr", "rmarkdown")'
-          R -e 'renv::snapshot()'
-          R -e 'renv::restore()'
-          
-      - name: Identify and email articles
-        #env: 
-        #  repo_token: ${{ secrets.GITHUB_TOKEN }} 
-        run: |
-         Rscript -e 'rmarkdown::render(input = "demo.Rmd")'
-            if [[ "$(git status --porcelain)" != "" ]]; then
-            git config --local user.name "$GITHUB_ACTOR"
-            git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-            git add *
-            git commit -m "Auto update Report"
-            git push origin
-          fi
+          git add .
+          git commit -m 'Re-build my-document' || echo "No changes to commit"
+          git push origin || echo "No changes to commit"
