@@ -31,7 +31,7 @@ jobs:
       - name: source utils functions
         run: Rscript -e 'source("scripts/utlis.R")'
       - name: run-script
-        run: Rscript -e 'rmarkdown::render("data-valid-demo.Rmd", output_file =  paste0('pb/rep', format(now_asia(),'_%Y%m%d_%H%M%S'), '.html'))'   
+        run: Rscript -e 'rmarkdown::render("pb_schedule.Rmd", output_file =  paste0("pb/sch_rep", format(now_asia(),"_%Y%m%d_%H%M%S"), ".html"))'   
         
       - name: commit files
         run: |
