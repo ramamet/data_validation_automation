@@ -12,7 +12,7 @@ jobs:
       - name: Render document
         uses: lc5415/rmarkdown-action@v1
         with:
-          input_file: gha_RMark_demo.Rmd
+          input_file: test/demo.Rmd
 	  output_format: pdf_document
       - name: Commit files
         run: |
