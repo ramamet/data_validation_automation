@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  "*/15 * * * *"
+    - cron:  "*/10 * * * *"
     
 name: 12-cron_pointblank schedule
 
@@ -28,10 +28,8 @@ jobs:
             any::pointblank
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
-      - name: source utils functions
-        run: Rscript -e 'source("scripts/utlis.R")'
       - name: run-script
-        run: Rscript -e 'rmarkdown::render("pb_schedule.Rmd", output_file =  paste0("pb/sch_rep", format(now_asia(),"_%Y%m%d_%H%M%S"), ".html"))'   
+        run: Rscript -e 'rmarkdown::render("pb_schedule.Rmd", output_file =  paste0("pb/sch_rep", format(as.POSIXlt(Sys.time(), tz = "Asia/Calcutta"),"_%Y%m%d_%H%M%S"), ".html"))'   
         
       - name: commit files
         run: |
