@@ -1,5 +1,5 @@
 ---
-title: "GHA RMarkdown Demo"
+title: "pdf"
 author: Ramanathan Perumal
 date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %X')`"
 output: pdf_document
