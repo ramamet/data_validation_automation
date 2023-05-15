@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  "0 15 * * *"
+    - cron:  "*/15 * * * *"
     
 name: 12-cron_pointblank schedule
 
