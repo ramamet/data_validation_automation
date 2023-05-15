@@ -1,9 +1,21 @@
 ---
 title: "11-GHA Pointblank Demo"
 author: Ramanathan Perumal
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %X')`"
 output: html_document
 ---
+
+```{r}
+now_asia <- function() {
+   now <- Sys.time()
+   attr(now, "tzone") <- "Asia/Calcutta"
+   now
+}
+now_asia()
+```
+---
+date: "Last compiled on `r now_asia()` , TZ: 'Asia/Calcutta'"
+---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

@@ -17,7 +17,7 @@ jobs:
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
       - name: run-script
-        run: Rscript -e 'rmarkdown::render("demo.Rmd", output_file = "index.html")'   
+        run: Rscript -e 'rmarkdown::render("demo.Rmd")'   
         
       - name: commit files
         run: |

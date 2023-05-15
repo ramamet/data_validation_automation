@@ -17,14 +17,20 @@ jobs:
           sudo apt-get update && sudo apt-get install --yes libcurl4-openssl-dev
       - uses: r-lib/actions/setup-pandoc@v2
       - uses: r-lib/actions/setup-tinytex@v2
-      - name: Install dplyr package
-        run: Rscript -e 'install.packages("dplyr", repos = "https://cran.rstudio.com")'    
-      - name: Install pointblank package
-        run: Rscript -e 'install.packages("pointblank", repos = "https://cran.rstudio.com")'   
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 2
+          packages:
+            any::dplyr
+            any::pointblank
+      # - name: Install dplyr package
+      #   run: Rscript -e 'install.packages("dplyr", repos = "https://cran.rstudio.com")'    
+      # - name: Install pointblank package
+      #   run: Rscript -e 'install.packages("pointblank", repos = "https://cran.rstudio.com")'   
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
       - name: run-script
-        run: Rscript -e 'rmarkdown::render("data-valid-demo.Rmd", output_file = "data-valid-demo.html")'   
+        run: Rscript -e 'rmarkdown::render("data-valid-demo.Rmd", output_file = "index.html")'   
         
       - name: commit files
         run: |
