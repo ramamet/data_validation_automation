@@ -20,6 +20,7 @@ jobs:
           cache-version: 2
           packages:
             any::dplyr
+            any::rmarkdown
 
       - name: run-script
         run: Rscript -e 'rmarkdown::render("gha_RMark_demo.Rmd", output_file = "index.html", output_dir = "docs")'   
