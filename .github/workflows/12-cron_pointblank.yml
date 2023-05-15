@@ -4,7 +4,7 @@ on:
     # * is a special character in YAML so you have to quote this string
     - cron:  "0 15 * * *"
     
-name: 11-gha_pointblank
+name: 12-cron_pointblank schedule
 
 jobs:
   render:
