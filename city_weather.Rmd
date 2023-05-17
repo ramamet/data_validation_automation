@@ -1,0 +1,85 @@
+---
+title: "13-GHA City Weather API"
+author: Ramanathan Perumal
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r echo=FALSE}
+now_asia <- function() {
+   now <- Sys.time()
+   attr(now, "tzone") <- "Asia/Calcutta"
+   now
+}
+```
+---
+date: "Last compiled on `r now_asia()` , TZ: 'Asia/Calcutta'"
+---
+
+
+```{r setup, include=FALSE}
+
+# date: "Last updated weather data on `r city_weather_now$datetime[1]`"
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(pointblank)
+library(openmeteo)
+```
+
+```{r echo=FALSE}
+# load city geocode data
+load("./data/city_gc.rda")
+```
+
+### Retrieve Current Weather from the Open-Meteo API
+
+weather_now() calls the Open-Meteo weather API for the most recently recorded weather conditions a given location. We have used it for some of Indian cities.
+
+```{r echo=FALSE}
+# empty list
+list_city_weather <- list()
+
+# run through list object
+for(i in 1:nrow(city_gc)){
+  #print(city_gc$name[i])
+  list_city_weather[[i]] <- weather_now(c(city_gc$latitude[i] , city_gc$longitude[i] ), timezone = city_gc$timezone[i])
+}
+
+city_weather_now <- do.call(rbind, list_city_weather) %>%
+                    mutate(city = city_gc$name) %>%
+                    relocate(city, .after = datetime ) %>%
+                    dplyr::select(-weathercode)
+
+city_weather_now
+
+
+
+```
+
+### Pointblank validation flow
+
+```{r}
+agent <- 
+  create_agent(
+    tbl = city_weather_now,
+    tbl_name = "Weather Data",
+    label = "Weather data from the Open-Meteo API"
+  ) %>%
+  col_is_posix(vars(datetime)) %>%
+  col_vals_lt(vars(temperature), value = 32) %>%
+  col_vals_between(vars(windspeed), left = 5, right = 10) %>%
+  interrogate()
+```
+
+The full-featured display-table-based report can be viewed by printing the agent object;
+
+```{r}
+report <- get_agent_report(agent)
+report
+```
