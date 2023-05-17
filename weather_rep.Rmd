@@ -56,11 +56,19 @@ city_weather_now <- do.call(rbind, list_city_weather) %>%
                     relocate(city, .after = datetime ) %>%
                     dplyr::select(-weathercode)
 
-city_weather_now
-
-
-
 ```
+```{r echo = FALSE}
+avg_temp <- mean(city_weather_now$temperature) 
+avg_temp <- round(avg_temp, 2)
+```
+
+```{r}
+city_weather_now
+```
+
+Average temperature of the dataset is `r avg_temp` $^\circ$ C.
+
+
 
 ### Pointblank validation flow
 
@@ -72,7 +80,7 @@ agent <-
     label = "Weather data from the Open-Meteo API"
   ) %>%
   col_is_posix(vars(datetime)) %>%
-  col_vals_lt(vars(temperature), value = 32) %>%
+  col_vals_lte(vars(temperature), value = avg_temp) %>%
   col_vals_between(vars(windspeed), left = 5, right = 10) %>%
   interrogate()
 ```

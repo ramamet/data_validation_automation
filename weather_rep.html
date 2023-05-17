@@ -165,7 +165,7 @@ pre code {
 
 <h1 class="title toc-ignore">13-GHA City Weather API</h1>
 <h4 class="author">Ramanathan Perumal</h4>
-<h4 class="date">Last compiled on 2023-05-17 10:46:59 , TZ: ‘Asia/Calcutta’</h4>
+<h4 class="date">Last compiled on 2023-05-17 11:26:33 , TZ: ‘Asia/Calcutta’</h4>
 
 </div>
 
@@ -176,11 +176,13 @@ library(openmeteo)</code></pre>
 <div id="retrieve-current-weather-from-the-open-meteo-api" class="section level3">
 <h3>Retrieve Current Weather from the Open-Meteo API</h3>
 <p>weather_now() calls the Open-Meteo weather API for the most recently recorded weather conditions a given location. We have used it for some of Indian cities.</p>
+<pre class="r"><code>city_weather_now</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["datetime"],"name":[1],"type":["dttm"],"align":["right"]},{"label":["city"],"name":[2],"type":["chr"],"align":["left"]},{"label":["temperature"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["windspeed"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winddirection"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["is_day"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2023-05-17 10:30:00","2":"Bengaluru","3":"29.9","4":"6.7","5":"306","6":"1"},{"1":"2023-05-17 10:30:00","2":"Chennai","3":"36.2","4":"9.6","5":"200","6":"1"},{"1":"2023-05-17 10:30:00","2":"Delhi","3":"38.1","4":"4.8","5":"333","6":"1"},{"1":"2023-05-17 10:30:00","2":"Madurai","3":"33.6","4":"2.2","5":"261","6":"1"},{"1":"2023-05-17 10:30:00","2":"Mumbai","3":"32.7","4":"7.4","5":"293","6":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p>Average temperature of the dataset is 34.1 <span class="math inline">\(^\circ\)</span> C.</p>
 </div>
 <div id="pointblank-validation-flow" class="section level3">
 <h3>Pointblank validation flow</h3>
@@ -191,7 +193,7 @@ library(openmeteo)</code></pre>
     label = &quot;Weather data from the Open-Meteo API&quot;
   ) %&gt;%
   col_is_posix(vars(datetime)) %&gt;%
-  col_vals_lt(vars(temperature), value = 32) %&gt;%
+  col_vals_lte(vars(temperature), value = avg_temp) %&gt;%
   col_vals_between(vars(windspeed), left = 5, right = 10) %&gt;%
   interrogate()</code></pre>
 <p>The full-featured display-table-based report can be viewed by printing the agent object;</p>
@@ -707,9 +709,9 @@ html {
 </div></td></tr>
     <tr><td headers="status_color" class="gt_row gt_left" style="background-color: rgba(76,166,76,0.5); height: 40px"></td>
 <td headers="i" class="gt_row gt_right" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">2</td>
-<td headers="type" class="gt_row gt_left" style="height: 40px"><div class="gt_from_md"><div aria-label="Expect that values in `temperature` should be &lt; `32`. " data-balloon-pos="right" style="width:fit-content;">
-  <div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;"><?xml version="1.0" encoding="UTF-8" ?><svg width="30px" height="30px" viewBox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <title>col_vals_lt</title>    <g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="col_vals_lt" transform="translate(0.000000, 0.310345)">            <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path>            <path d="M52.712234,11 L14.712234,11 C13.05989,11 11.712234,12.347656 11.712234,14 L11.712234,52 C11.712234,53.652344 13.05989,55 14.712234,55 L52.712234,55 C54.364578,55 55.712234,53.652344 55.712234,52 L55.712234,14 C55.712234,12.347656 54.364578,11 52.712234,11 Z M40.419265,46.292969 L39.005203,47.707031 L24.298172,33 L39.005203,18.292969 L40.419265,19.707031 L27.126297,33 L40.419265,46.292969 Z" id="less_than" fill="#000000" fill-rule="nonzero"></path>        </g>    </g></svg></div>
-  <code style="font-size:11px;"> col_vals_lt()</code>
+<td headers="type" class="gt_row gt_left" style="height: 40px"><div class="gt_from_md"><div aria-label="Expect that values in `temperature` should be &lt;= `34.1`. " data-balloon-pos="right" style="width:fit-content;">
+  <div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;"><?xml version="1.0" encoding="UTF-8" ?><svg width="30px" height="30px" viewBox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <title>col_vals_lte</title>    <g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="col_vals_lte" transform="translate(0.000000, 0.793103)">            <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path>            <path d="M53.712234,12 L13.712234,12 C13.157547,12 12.712234,12.449219 12.712234,13 L12.712234,53 C12.712234,53.550781 13.157547,54 13.712234,54 L53.712234,54 C54.266922,54 54.712234,53.550781 54.712234,53 L54.712234,13 C54.712234,12.449219 54.266922,12 53.712234,12 Z M42.227859,19.125 L43.196609,20.875 L26.770828,30 L43.196609,39.125 L42.227859,40.875 L22.65364,30 L42.227859,19.125 Z M44.712234,47 L22.712234,47 L22.712234,45 L44.712234,45 L44.712234,47 Z" id="less_than_equal" fill="#000000" fill-rule="nonzero"></path>        </g>    </g></svg></div>
+  <code style="font-size:11px;"> col_vals_lte()</code>
 </div>
 </div></td>
 <td headers="columns" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div class="gt_from_md"><div aria-label="temperature" data-balloon-pos="left">
@@ -718,23 +720,23 @@ html {
   </p>
 </div>
 </div></td>
-<td headers="values" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div class="gt_from_md"><div aria-label="32" data-balloon-pos="left"><p style="margin-top: 0px; margin-bottom: 0px; font-size: 11px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><code>32</code></p></div>
+<td headers="values" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div class="gt_from_md"><div aria-label="34.1" data-balloon-pos="left"><p style="margin-top: 0px; margin-bottom: 0px; font-size: 11px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><code>34.1</code></p></div>
 </div></td>
 <td headers="precon" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><div class="gt_from_md"><p><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left"><svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">    <g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="unchanged" transform="translate(0.500000, 0.570147)">            <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect>            <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>            <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path>        </g>    </g></svg></span></p>
 </div></td>
 <td headers="eval_sym" class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><div class="gt_from_md"><p><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></p>
 </div></td>
 <td headers="units" class="gt_row gt_right" style="font-size: 11px; height: 40px"><code>5</code></td>
-<td headers="n_pass" class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>1</code><br><code>0.20</code></td>
-<td headers="n_fail" class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>4</code><br><code>0.80</code></td>
+<td headers="n_pass" class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>3</code><br><code>0.60</code></td>
+<td headers="n_fail" class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br><code>0.40</code></td>
 <td headers="W" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><div class="gt_from_md"><p>—</p>
 </div></td>
 <td headers="S" class="gt_row gt_center" style="background-color: #FCFCFC; height: 40px"><div class="gt_from_md"><p>—</p>
 </div></td>
 <td headers="N" class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><div class="gt_from_md"><p>—</p>
 </div></td>
-<td headers="extract" class="gt_row gt_center" style="height: 40px"><div class="gt_from_md"><a href="data:text/csv;base64,ImRhdGV0aW1lIiwiY2l0eSIsInRlbXBlcmF0dXJlIiwid2luZHNwZWVkIiwid2luZGRpcmVjdGlvbiIsImlzX2RheSINCjIwMjMtMDUtMTcgMTA6MzA6MDAsIkNoZW5uYWkiLDM2LjIsOS42LDIwMCwxDQoyMDIzLTA1LTE3IDEwOjMwOjAwLCJEZWxoaSIsMzguMSw0LjgsMzMzLDENCjIwMjMtMDUtMTcgMTA6MzA6MDAsIk1hZHVyYWkiLDMzLjYsMi4yLDI2MSwxDQoyMDIzLTA1LTE3IDEwOjMwOjAwLCJNdW1iYWkiLDMyLjcsNy40LDI5MywxDQo=" download="extract_0002.csv">
-  <button aria-label="There are 4 &#39;fail&#39; rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">CSV</button>
+<td headers="extract" class="gt_row gt_center" style="height: 40px"><div class="gt_from_md"><a href="data:text/csv;base64,ImRhdGV0aW1lIiwiY2l0eSIsInRlbXBlcmF0dXJlIiwid2luZHNwZWVkIiwid2luZGRpcmVjdGlvbiIsImlzX2RheSINCjIwMjMtMDUtMTcgMTA6MzA6MDAsIkNoZW5uYWkiLDM2LjIsOS42LDIwMCwxDQoyMDIzLTA1LTE3IDEwOjMwOjAwLCJEZWxoaSIsMzguMSw0LjgsMzMzLDENCg==" download="extract_0002.csv">
+  <button aria-label="There are 2 &#39;fail&#39; rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">CSV</button>
 </a>
 </div></td></tr>
     <tr><td headers="status_color" class="gt_row gt_left" style="background-color: rgba(76,166,76,0.5); height: 40px"></td>
@@ -772,9 +774,9 @@ html {
   </tbody>
   <tfoot class="gt_sourcenotes">
     <tr>
-      <td class="gt_sourcenote" colspan="14"><span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin-left:10px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;padding:2px 10px 2px 10px;">2023-05-17 10:47:03 IST</span>
+      <td class="gt_sourcenote" colspan="14"><span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin-left:10px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;padding:2px 10px 2px 10px;">2023-05-17 11:26:36 IST</span>
 <span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;margin:5px 1px 5px 0;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;">&lt; 1 s</span>
-<span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 1px 5px -1px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;">2023-05-17 10:47:03 IST</span></td>
+<span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 1px 5px -1px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;">2023-05-17 11:26:36 IST</span></td>
     </tr>
   </tfoot>
   
