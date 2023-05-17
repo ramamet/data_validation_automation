@@ -31,7 +31,7 @@ jobs:
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
       - name: run-script
-        run: Rscript -e 'rmarkdown::render("weather_rep.Rmd", output_file =  paste0("reports/weather_rep", format(as.POSIXlt(Sys.time(), tz = "Asia/Calcutta"),"_%Y%m%d_%H%M%S"), ".html"))'   
+        run: Rscript -e 'rmarkdown::render("weather_pipe.Rmd", output_file =  paste0("reports/pipe_weather", format(as.POSIXlt(Sys.time(), tz = "Asia/Calcutta"),"_%Y%m%d_%H%M%S"), ".html"))'   
         
       - name: commit files
         run: |
