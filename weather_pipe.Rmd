@@ -1,0 +1,163 @@
+---
+title: "14-GHA Weather Pipe"
+author: Ramanathan Perumal
+output:
+  html_document:
+    theme: cosmo
+    df_print: paged
+---
+
+
+```{r echo=FALSE}
+now_asia <- function() {
+   now <- Sys.time()
+   attr(now, "tzone") <- "Asia/Calcutta"
+   now
+}
+```
+---
+date: "Last compiled on `r now_asia()` , TZ: 'Asia/Calcutta'"
+---
+
+
+```{r setup, include=FALSE}
+
+# date: "Last updated weather data on `r city_weather_now$datetime[1]`"
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(pointblank)
+library(openmeteo)
+library(projmgr)
+library(dplyr)
+library(purrr)
+library(glue)
+library(knitr)
+```
+
+```{r echo=FALSE}
+# load city geocode data
+load("./data/city_gc.rda")
+```
+
+### Retrieve Current Weather from the Open-Meteo API
+
+weather_now() calls the Open-Meteo weather API for the most recently recorded weather conditions a given location. We have used it for some of Indian cities.
+
+```{r echo=FALSE}
+# empty list
+list_city_weather <- list()
+
+# run through list object
+for(i in 1:nrow(city_gc)){
+  #print(city_gc$name[i])
+  list_city_weather[[i]] <- weather_now(c(city_gc$latitude[i] , city_gc$longitude[i] ), timezone = city_gc$timezone[i])
+}
+
+city_weather_now <- do.call(rbind, list_city_weather) %>%
+                    mutate(city = city_gc$name) %>%
+                    relocate(city, .after = datetime ) %>%
+                    dplyr::select(-weathercode)
+
+```
+```{r echo = FALSE}
+avg_temp <- mean(city_weather_now$temperature) 
+avg_temp <- round(avg_temp, 2)
+```
+
+```{r}
+city_weather_now
+```
+
+Average temperature of the dataset is `r avg_temp` $^\circ$ C.
+
+
+
+### Pointblank validation flow
+
+```{r}
+act <- action_levels(warn_at = 0.01, notify_at = 0.01, stop_at = NULL)
+table_name <- "weather_data"
+
+agent <- 
+  create_agent(
+    tbl = city_weather_now,
+    tbl_name = "Weather Data",
+    label = "Weather data from the Open-Meteo API",
+    actions = act
+  ) %>%
+  col_is_posix(vars(datetime)) %>%
+  col_vals_lte(vars(temperature), value = avg_temp) %>%
+  col_vals_between(vars(windspeed), left = 5, right = 10)
+
+res <- interrogate(agent)
+
+```
+
+The full-featured display-table-based report can be viewed by printing the agent object;
+
+```{r}
+report <- get_agent_report(res)
+report
+```
+
+
+## Links to Open Issues
+
+```{r post-to-github, echo =FALSE}
+repo <- create_repo_ref("ramamet", "data_validation_automation", identifier = "GITHUB_PAT")
+
+desc_components <- c(
+  "Variables: {glue_collapse(column)}",
+  "Date: {Sys.Date()}",
+  "Frequency: {n_failed}/{n} ({f_failed})",
+  "See full report at https://ramamet.github.io"
+)
+desc_template <- paste(desc_components, collapse = "\n")
+
+out <- 
+  res$validation_set %>%
+  filter(warn) %>%
+  select(columns_expr, brief, column, n, n_failed, f_failed) 
+
+issues_df <-
+  out %>%
+  rowwise() %>%
+  mutate(col_list = map(column, ~strsplit(., split = ", ")[[1]])) %>%
+  transmute(
+    title = glue("In {table_name}: {brief}"),
+    body = glue(desc_template),
+    label_table = glue("table:{table_name}"),
+    label_vars  = list(glue("var:{col_list}"))
+  ) %>%
+  transmute(
+    title,
+    body,
+    labels = list(c(label_table, unlist(label_vars)))
+  )
+
+issue_numbers <- purrr::pmap(issues_df, 
+                      possibly(~post_issue(ref = repo, ...), otherwise = "")
+                      )
+
+```
+
+```{r link-to-github, results = "asis", echo =FALSE}
+issues_open <- 
+  get_issues(repo, state = "open") %>%
+  parse_issues() %>%
+  arrange(number) %>%
+  mutate(link = glue("[{number}. {title}]({url})"))
+
+issues_open %>%
+    rowwise() %>%
+    select(
+        `Open Since` = created_at,
+        `Issue` = link,
+        `Assigned` = assignees_login,
+        `Activity` = n_comments
+    ) %>%
+  kable()
+```

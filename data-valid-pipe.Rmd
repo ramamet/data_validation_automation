@@ -71,6 +71,8 @@ issues_df <-
 issue_numbers <- pmap(issues_df, 
                       possibly(~post_issue(ref = repo, ...), otherwise = "")
                       )
+
+
 ```
 
 ```{r link-to-github, results = "asis"}

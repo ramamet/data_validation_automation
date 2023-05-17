@@ -3,6 +3,7 @@ title: "13-GHA City Weather API"
 author: Ramanathan Perumal
 output:
   html_document:
+    theme: cosmo
     df_print: paged
 ---
 

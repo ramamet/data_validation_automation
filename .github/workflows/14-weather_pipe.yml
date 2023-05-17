@@ -1,9 +1,7 @@
 on:
   workflow_dispatch:
-  schedule:
-    - cron:  "0 * * * *"
     
-name: 13-weather_pointblank scheduled report
+name: 14-weather_pipe scheduled report
 
 jobs:
   render:
@@ -26,6 +24,10 @@ jobs:
             any::dplyr
             any::pointblank
             any::openmeteo
+            any::projmgr
+            any::purrr
+            any::glue
+            any::knitr
       - name: Install rmarkdown
         run: Rscript -e 'install.packages("rmarkdown", repos = "https://cran.rstudio.com")'
       - name: run-script
